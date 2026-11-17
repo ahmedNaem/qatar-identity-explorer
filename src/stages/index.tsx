@@ -4,7 +4,7 @@ import {
   FINAL_CHOICES, FINAL_QUESTION, FUTURE_CARDS, HERO_CARDS, MAP_SPOTS, STAGE1_QUESTIONS, STAGE2_QUESTIONS,
   STAGE3_QUESTIONS, STAGE5_QUESTIONS, TIMELINE, TREASURES, VILLAGE_SPOTS, POINTS_CORRECT,
 } from '../data/content'
-import { Backdrop, Boy, Burst, FlagVariant, QatarMap, type FlagKind } from '../components/art'
+import { Backdrop, Burst, FlagVariant, type FlagKind } from '../components/art'
 import { DragBoard, Discover, Guide, QuizSeries, StageRunner, useStage, type Step } from '../components/ui'
 import { sfx } from '../lib/audio'
 
@@ -46,14 +46,11 @@ export const stage1 = (): Step[] => [
   {
     key: 'map', render: next => (
       <Discover prompt="مرحباً! أنا مرشدك. اضغط على النقاط في الخريطة لتعرف وطنك 🗺️" onDone={next}
-        scene={<div className="absolute inset-0 flex justify-center" style={{ background: 'linear-gradient(#2a8fc0,#7fd6ee)' }}>
-          <QatarMap />
-          <svg className="absolute right-[4%] top-[8%] hidden sm:block" width="80" viewBox="0 0 60 60" aria-hidden><circle cx="30" cy="30" r="28" fill="#fff" opacity=".8" /><path d="M30 6 L36 30 L30 54 L24 30Z" fill="#8A1538" /><text x="30" y="16" fontSize="9" textAnchor="middle" fill="#333">ش</text></svg>
-        </div>}
+        scene={<Backdrop kind="map" />}
         spots={[
-          { ...MAP_SPOTS[0], x: 57, y: 45, size: 36 },
-          { ...MAP_SPOTS[1], x: 85, y: 42, size: 36 },
-          { ...MAP_SPOTS[2], x: 48, y: 87, size: 36 },
+          { ...MAP_SPOTS[0], icon: '📍', x: 65, y: 40, size: 40 },
+          { ...MAP_SPOTS[1], x: 86, y: 62, size: 40 },
+          { ...MAP_SPOTS[2], x: 32, y: 90, size: 40 },
         ]} />
     ),
   },
@@ -69,11 +66,11 @@ export const stage2 = (): Step[] => [
       <Discover prompt="هذه قرية قطرية قديمة! اضغط على كل شيء لتعرف كيف عاش الأجداد 🌅" onDone={next}
         scene={<Backdrop kind="village" />}
         spots={[
-          { ...VILLAGE_SPOTS[4], x: 17, y: 34, size: 56 },
-          { ...VILLAGE_SPOTS[3], x: 48, y: 38, size: 56 },
-          { ...VILLAGE_SPOTS[0], x: 80, y: 62, size: 56 },
-          { ...VILLAGE_SPOTS[1], x: 50, y: 80, size: 50 },
-          { ...VILLAGE_SPOTS[2], x: 17, y: 78, size: 50 },
+          { ...VILLAGE_SPOTS[4], x: 24, y: 30, size: 64 },
+          { ...VILLAGE_SPOTS[3], x: 43, y: 62, size: 64 },
+          { ...VILLAGE_SPOTS[0], x: 82, y: 40, size: 64 },
+          { ...VILLAGE_SPOTS[1], x: 82, y: 78, size: 64 },
+          { ...VILLAGE_SPOTS[2], x: 12, y: 74, size: 64 },
         ]} />
     ),
   },
@@ -125,12 +122,10 @@ export const stage3 = (): Step[] => [
   {
     key: 'cards', render: next => (
       <div>
-        <div className="mb-3 flex justify-center">
-          <div className="relative rounded-3xl bg-white/20 p-2 text-center backdrop-blur">
-            <Boy size={150} variant="sheikh" mood="happy" wave={false} />
-            <div className="text-sm font-bold text-white">رسم تخيّلي للشيخ جاسم</div>
-          </div>
-        </div>
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mx-auto mb-3 w-fit rounded-3xl border-4 border-gold bg-gradient-to-b from-maroon-light to-maroon px-8 py-4 text-center shadow-2xl">
+          <div className="text-xl font-bold text-amber-200">🏰 حكاية تأسيس الدولة</div>
+          <div className="text-4xl font-black text-white sm:text-6xl">18 ديسمبر 1878</div>
+        </motion.div>
         <Discover prompt="مرحباً بك في القلعة! اضغط على البطاقات لتتعرّف على بطل من أبطال تاريخنا 🏰" onDone={next} spots={HERO_CARDS} />
       </div>
     ),

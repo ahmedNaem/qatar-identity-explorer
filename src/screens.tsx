@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Backdrop, Boy, Burst, QatarFlag, QatarMap } from './components/art'
+import { Backdrop, Badge, Boy, Burst, QatarFlag } from './components/art'
 import { Modal, SCHOOL, TopBar } from './components/ui'
 import { sfx } from './lib/audio'
 import { useGame } from './lib/store'
@@ -27,10 +27,9 @@ export function Start({ onSolo, onClass }: { onSolo: () => void; onClass: () => 
               <QatarFlag width={210} />
             </div>
           </div>
-          <div className="hidden sm:block" style={{ transform: 'perspective(500px) rotateX(24deg)' }}><QatarMap width={110} /></div>
         </motion.div>
         <motion.h1 initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2, type: 'spring' }}
-          className="text-5xl font-black text-white sm:text-7xl" style={{ textShadow: '0 4px 0 #5e0d26, 0 8px 18px rgba(0,0,0,.45)', WebkitTextStroke: '2px #5e0d26' }}>
+          className="text-5xl font-black text-white sm:text-7xl" style={{ textShadow: '0 4px 0 #5e0d26, 0 8px 18px rgba(0,0,0,.45)', WebkitTextStroke: '10px #5e0d26', paintOrder: 'stroke fill' }}>
           مستكشف الهوية القطرية
         </motion.h1>
         <p className="text-xl font-black text-maroon-dark drop-shadow sm:text-3xl" style={{ textShadow: '0 2px 0 #fff' }}>رحلة ممتعة لاكتشاف وطننا وتراثنا</p>
@@ -79,7 +78,7 @@ export function WorldMap({ onPlay, onHome, onFinale }: { onPlay: (id: number) =>
                 disabled={!open} onClick={() => { sfx.click(); onPlay(s.id) }}
                 className="panel relative overflow-hidden p-0 text-start disabled:opacity-60" style={{ cursor: open ? 'pointer' : 'not-allowed' }}>
                 <div className="flex h-24 items-center justify-between px-4 text-white" style={{ background: `linear-gradient(135deg, ${bgs[i]}, #00000066)` }}>
-                  <span className="text-6xl">{open ? s.badgeEmoji : '🔒'}</span>
+                  {open ? <Badge n={s.id} size={80} locked={!r?.done} /> : <span className="text-6xl">🔒</span>}
                   <span className="text-5xl font-black opacity-80">{s.id}</span>
                 </div>
                 <div className="p-3">
@@ -133,7 +132,7 @@ export function Finale({ onBack }: { onBack: () => void }) {
             {STAGES.map(s => (
               <motion.div key={s.id} initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: badges.includes(s.id) ? 1 : 0.3 }} transition={{ delay: 0.6 + s.id * 0.2 }}
                 className="flex w-[110px] flex-col items-center rounded-2xl bg-gradient-to-b from-amber-100 to-amber-300 p-2 shadow-lg">
-                <span className="text-5xl">{s.badgeEmoji}</span><span className="text-sm font-black text-maroon">{s.badge}</span>
+                <Badge n={s.id} size={80} locked={!badges.includes(s.id)} /><span className="text-sm font-black text-maroon">{s.badge}</span>
               </motion.div>
             ))}
           </div>

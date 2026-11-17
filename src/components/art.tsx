@@ -1,4 +1,4 @@
-import { useId, useMemo, type CSSProperties } from 'react'
+import { useId, useMemo, useState, type CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 
 /* ───────── العلم ───────── */
@@ -72,10 +72,10 @@ export function FlagVariant({ kind, width = 200 }: { kind: FlagKind; width?: num
 }
 
 /* ───────── الشخصية الكرتونية (ولد قطري) ───────── */
-export type Mood = 'happy' | 'cheer' | 'sad' | 'think'
-export function Boy({ size = 200, mood = 'happy', variant = 'boy', wave = true }: { size?: number; mood?: Mood; variant?: 'boy' | 'sheikh' | 'scout'; wave?: boolean }) {
+export type Mood = 'happy' | 'cheer' | 'sad' | 'think' | 'point'
+function BoySvg({ size = 200, mood = 'happy', wave = true }: { size?: number; mood?: Mood; wave?: boolean }) {
   const id = useId().replace(/:/g, '')
-  const sheikh = variant === 'sheikh'
+  const sheikh = false as boolean
   const robe = sheikh ? ['#f3ead6', '#cfc2a2'] : ['#ffffff', '#d9d4ca']
   return (
     <svg viewBox="0 0 200 300" width={size} height={size * 1.5} aria-hidden>
@@ -142,8 +142,28 @@ export function Boy({ size = 200, mood = 'happy', variant = 'boy', wave = true }
   )
 }
 
+const MOOD_IMG: Record<Mood, string> = { happy: 'mascot_wave', cheer: 'mascot_cheer', sad: 'mascot_sad', think: 'mascot_think', point: 'mascot_point' }
+/** المرشد: صورة ثلاثية الأبعاد، وإذا فشل تحميلها يظهر الرسم البديل */
+export function Boy({ size = 200, mood = 'happy', wave = true }: { size?: number; mood?: Mood; wave?: boolean }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) return <BoySvg size={size} mood={mood} wave={wave} />
+  return (
+    <motion.img key={mood} src={`${import.meta.env.BASE_URL}img/${MOOD_IMG[mood]}.webp`} alt="" aria-hidden draggable={false} onError={() => setFailed(true)}
+      initial={{ scale: 0.9, y: 6 }} animate={{ scale: 1, y: 0 }} transition={{ type: 'spring', damping: 10 }}
+      style={{ height: size * 1.5, width: 'auto', filter: 'drop-shadow(0 8px 6px rgba(0,0,0,.3))' }} />
+  )
+}
+
+const ICON_FILE: Record<string, string> = {
+  falcon: 'item_falcon', dallah: 'item_dallah', finjan: 'item_finjan', sadu: 'item_sadu', majlis: 'item_majlis', thobe: 'item_thobe',
+  ship: 'item_dhow', dhow: 'item_dhow', pearl: 'item_pearl', camel: 'obj_camel', diver: 'obj_diver', fish: 'obj_fish', house: 'obj_house',
+}
+export function Badge({ n, size = 90, locked }: { n: number; size?: number; locked?: boolean }) {
+  return <img src={`${import.meta.env.BASE_URL}img/badge_${n}.webp`} alt="" aria-hidden draggable={false} style={{ height: size, width: 'auto', filter: locked ? 'grayscale(1) opacity(.35)' : 'drop-shadow(0 6px 5px rgba(0,0,0,.3))' }} />
+}
+
 /* ───────── أيقونات التراث ───────── */
-export function Icon({ id, size = 110 }: { id: string; size?: number }) {
+function IconSvg({ id, size = 110 }: { id: string; size?: number }) {
   const u = useId().replace(/:/g, '')
   const g = (n: string, a: string, b: string) => <linearGradient id={`${n}${u}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={a} /><stop offset="1" stopColor={b} /></linearGradient>
   const wrap = (children: React.ReactNode) => <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden>{children}</svg>
@@ -229,6 +249,13 @@ export function Icon({ id, size = 110 }: { id: string; size?: number }) {
   }
 }
 
+export function Icon({ id, size = 110 }: { id: string; size?: number }) {
+  const [failed, setFailed] = useState(false)
+  const file = ICON_FILE[id]
+  if (!file || failed) return <IconSvg id={id === 'dhow' ? 'ship' : id} size={size} />
+  return <img src={`${import.meta.env.BASE_URL}img/${file}.webp`} alt="" aria-hidden draggable={false} onError={() => setFailed(true)} style={{ height: size, width: size, objectFit: 'contain', filter: 'drop-shadow(0 6px 4px rgba(0,0,0,.28))' }} />
+}
+
 /* ───────── خلفيات ───────── */
 export function Clouds({ count = 4, tint = '#fff' }: { count?: number; tint?: string }) {
   const items = useMemo(() => Array.from({ length: count }, (_, i) => ({
@@ -286,7 +313,20 @@ export function Skyline({ color = '#e8d5a8', accent = '#f2b632', w = 700 }: { co
 }
 
 export type BackdropKind = 'day' | 'map' | 'village' | 'castle' | 'museum' | 'future' | 'night'
+const BG_FILE: Partial<Record<BackdropKind, string>> = { day: 'bg_start', map: 'bg_map', village: 'bg_village', castle: 'bg_castle', museum: 'bg_museum', future: 'bg_future' }
 export function Backdrop({ kind }: { kind: BackdropKind }) {
+  const [failed, setFailed] = useState(false)
+  const file = BG_FILE[kind]
+  if (!file || failed) return <BackdropSvg kind={kind} />
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ background: '#1d4f7a' }} aria-hidden>
+      <img src={`${import.meta.env.BASE_URL}img/${file}.webp`} alt="" draggable={false} onError={() => setFailed(true)}
+        className="kenburns absolute inset-0 h-full w-full object-cover" />
+      {kind === 'museum' && <div className="absolute inset-0 bg-black/10" />}
+    </div>
+  )
+}
+function BackdropSvg({ kind }: { kind: BackdropKind }) {
   const sky: Record<BackdropKind, string> = {
     day: 'linear-gradient(#5ec4f0 0%, #bfeaff 60%, #fff3d6 100%)',
     map: 'linear-gradient(#2a8fc0, #6fd0ec 70%, #bfeaff)',

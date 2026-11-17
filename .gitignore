@@ -1,3 +1,5 @@
 node_modules
 dist
 .claude
+assets-in/zip1
+assets-in/*.jpg

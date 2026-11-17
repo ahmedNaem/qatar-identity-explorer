@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { AnimatePresence, motion } from 'framer-motion'
 import { sfx } from '../lib/audio'
 import { useGame } from '../lib/store'
-import { Backdrop, Boy, Burst, Icon, type BackdropKind, type Mood } from './art'
+import { Backdrop, Badge, Boy, Burst, Icon, type BackdropKind, type Mood } from './art'
 import { POINTS_CORRECT, STAGES, type Question } from '../data/content'
 
 export const SCHOOL = 'مدرسة الثمامة الابتدائية للبنين'
@@ -79,7 +79,7 @@ function StageComplete({ id, stars, points, onExit, onNext }: { id: number; star
         ))}
       </div>
       <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.2 }} className="mx-auto my-3 flex w-fit items-center gap-3 rounded-2xl bg-amber-100 px-5 py-3 text-2xl font-black text-maroon">
-        <span className="text-5xl">{st.badgeEmoji}</span><div>شارة جديدة<br />«{st.badge}»</div>
+        <Badge n={id} size={90} /><div>شارة جديدة<br />«{st.badge}»</div>
       </motion.div>
       <p className="mb-4 text-2xl font-black text-slate-700">نقاط المرحلة: {points}</p>
       <div className="flex flex-wrap justify-center gap-3">
@@ -224,9 +224,10 @@ export function Discover({ spots, scene, prompt, onDone, withQuiz, needQuiz }: {
         {scene ? (
           <div className="relative">
             {!done && <span className="absolute inset-0 rounded-full border-4 border-gold" style={{ animation: 'pulse-ring 1.6s ease-out infinite' }} />}
-            <div className="flex flex-col items-center rounded-2xl bg-white/90 px-2 pt-1 shadow-xl ring-4" style={{ ['--tw-ring-color' as any]: done ? '#25a244' : '#f2b632' }}>
-              <Pic icon={s.icon} size={s.size ?? 64} />
-              <span className="text-sm font-black text-maroon sm:text-lg">{s.title}{done ? ' ✅' : ''}</span>
+            <div className="flex flex-col items-center rounded-2xl bg-white/85 px-1.5 pt-1 shadow-xl ring-4" style={{ ['--tw-ring-color' as any]: done ? '#25a244' : '#f2b632' }}>
+              <div className="sm:hidden"><Pic icon={s.icon} size={Math.round((s.size ?? 64) * 0.62)} /></div>
+              <div className="hidden sm:block"><Pic icon={s.icon} size={s.size ?? 64} /></div>
+              <span className="text-[11px] font-black leading-tight text-maroon sm:text-base">{s.title}{done ? ' ✅' : ''}</span>
             </div>
           </div>
         ) : (
@@ -246,7 +247,7 @@ export function Discover({ spots, scene, prompt, onDone, withQuiz, needQuiz }: {
         <div className="h-3 w-32 overflow-hidden rounded-full bg-black/30"><div className="h-full bg-gold transition-all" style={{ width: `${(seen.length / spots.length) * 100}%` }} /></div>
       </div>
       {scene ? (
-        <div className="relative mx-auto aspect-[4/5] w-full overflow-hidden rounded-3xl border-4 border-white shadow-2xl sm:aspect-[16/10]" style={{ maxWidth: 'min(900px, max(320px, calc((100dvh - 300px) * 1.6)))' }}>
+        <div className="relative mx-auto aspect-[16/9] w-full overflow-hidden rounded-3xl border-4 border-white shadow-2xl" style={{ maxWidth: 'min(900px, max(320px, calc((100dvh - 300px) * 1.78)))' }}>
           {scene}{btns}
         </div>
       ) : (
