@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Backdrop, Badge, Boy, Burst, QatarFlag } from './components/art'
 import { Modal, SCHOOL, TopBar } from './components/ui'
+import { VideoClip, hasClip } from './components/VideoClip'
 import { sfx } from './lib/audio'
 import { useGame } from './lib/store'
 import {
@@ -119,8 +120,10 @@ export function WorldMap({ onPlay, onHome, onFinale }: { onPlay: (id: number) =>
 /* ───────── الخاتمة ───────── */
 export function Finale({ onBack }: { onBack: () => void }) {
   const { total, badges } = useGame()
+  const [clip, setClip] = useState(() => hasClip('finale'))
   return (
     <div className="relative min-h-dvh overflow-hidden">
+      <AnimatePresence>{clip && <VideoClip clip="finale" onDone={() => setClip(false)} />}</AnimatePresence>
       <Backdrop kind="day" />
       <Burst big n={36} />
       <div className="relative z-10 mx-auto flex min-h-dvh max-w-3xl flex-col items-center justify-center gap-3 px-4 py-8 text-center">

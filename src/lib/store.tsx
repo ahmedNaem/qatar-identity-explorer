@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { resetVideosSeen } from '../components/VideoClip'
 import { STAGES } from '../data/content'
 import { setMusic, setSfx } from './audio'
 
@@ -57,7 +58,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     },
     setSound: sfx => setSaved(s => ({ ...s, sfx })),
     setMusicOn: music => setSaved(s => ({ ...s, music })),
-    resetAll: () => { setSaved(s => ({ ...blank(), sfx: s.sfx, music: s.music })) },
+    resetAll: () => { resetVideosSeen(); setSaved(s => ({ ...blank(), sfx: s.sfx, music: s.music })) },
     isUnlocked: id => id === 1 || !!saved.stages[id - 1]?.done,
   }
   return <C.Provider value={value}>{children}</C.Provider>

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { AnimatePresence, motion } from 'framer-motion'
 import { sfx } from '../lib/audio'
 import { useGame } from '../lib/store'
+import { VideoClip, hasClip } from './VideoClip'
 import { Backdrop, Badge, Boy, Burst, Icon, type BackdropKind, type Mood } from './art'
 import { POINTS_CORRECT, STAGES, type Question } from '../data/content'
 
@@ -28,6 +29,7 @@ export function StageRunner({ id, backdrop, steps, onExit, onNext }: {
   const [mistakes, setMistakes] = useState(0)
   const [mood, setMood] = useState<Mood>('happy')
   const [done, setDone] = useState(false)
+  const [intro, setIntro] = useState(() => hasClip('intro' + id))
   const st = STAGES[id - 1]
   const ctx: StageCtx = {
     award: n => setPoints(p => p + n),
@@ -42,6 +44,7 @@ export function StageRunner({ id, backdrop, steps, onExit, onNext }: {
   const stars = mistakes <= 1 ? 3 : mistakes <= 4 ? 2 : 1
   return (
     <SC.Provider value={ctx}>
+      <AnimatePresence>{intro && <VideoClip clip={'intro' + id} onDone={() => setIntro(false)} />}</AnimatePresence>
       <div className="relative min-h-full w-full overflow-hidden" style={{ minHeight: '100dvh' }}>
         <Backdrop kind={backdrop} />
         <TopBar title={`${id}. ${st.title}`} onHome={onExit} stagePoints={done ? 0 : points} />

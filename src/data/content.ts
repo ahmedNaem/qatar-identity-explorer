@@ -122,3 +122,16 @@ export const EXTRA_CLASS_QUESTIONS: Question[] = [
   { q: 'ما اسم الإبريق الذي نصنع فيه القهوة العربية؟', e: '☕', options: [{ t: 'الدلّة' }, { t: 'الصحن' }, { t: 'الملعقة' }], answer: 0 },
   { q: 'ماذا نسمّي الغطاء الذي يلبسه الرجال على الرأس؟', e: '🧑', options: [{ t: 'الغترة' }, { t: 'الحذاء' }, { t: 'القفاز' }], answer: 0 },
 ]
+
+/* ───────── مقاطع الفيديو القصيرة (اختيارية) ─────────
+   ضع ملفات MP4 داخل public/video/ ثم غيّر enabled إلى true.
+   intro1..intro5: افتتاحية المراحل · finale: مقطع الخاتمة.
+   إذا كان الملف مفقوداً أو فشل تحميله يُتخطّى المقطع تلقائياً. */
+export const VIDEO_CLIPS: Record<string, { file: string; poster?: string; enabled: boolean }> = {
+  intro1: { file: 'video/intro1.mp4', poster: 'img/poster_intro1.webp', enabled: false },
+  intro2: { file: 'video/intro2.mp4', poster: 'img/poster_intro2.webp', enabled: true },
+  intro3: { file: 'video/intro3.mp4', poster: 'img/poster_intro3.webp', enabled: true },
+  intro4: { file: 'video/intro4.mp4', poster: 'img/poster_intro4.webp', enabled: true },
+  intro5: { file: 'video/intro5.mp4', poster: 'img/poster_intro5.webp', enabled: true },
+  finale: { file: 'video/finale.mp4', poster: 'img/poster_finale.webp', enabled: true },
+}
